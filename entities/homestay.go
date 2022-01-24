@@ -8,7 +8,7 @@ type Homestay struct {
 	Name           string
 	Price          int
 	Booking_Status string
-	User_id        uint
+	HostID         uint
 	City_id        uint
 	BookingID      []Booking
 }
