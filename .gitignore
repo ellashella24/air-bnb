@@ -1,0 +1,6 @@
+configs/
+*.env
+go.mod
+Dockerfile
+docker-compose.yaml
+*.out
