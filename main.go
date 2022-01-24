@@ -10,11 +10,10 @@ import (
 
 func main() {
 	config := configs.GetConfig()
-	db := utils.InitDB(config)
+	utils.InitDB(config)
 
 	e := echo.New()
 
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%v", config.Port)))
 
-	fmt.Println(db)
 }
