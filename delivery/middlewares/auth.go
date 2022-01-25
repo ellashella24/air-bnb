@@ -14,6 +14,7 @@ import (
 type Auth interface {
 	GenerateToken(userID int) (string, error)
 	ExtractTokenUserID(e echo.Context) int
+	ExtractTokenEmail(e echo.Context) string
 	IsAdmin(next echo.HandlerFunc) error
 }
 
@@ -72,6 +73,41 @@ func (a *jwtService) ExtractTokenUserID(c echo.Context) int {
 	userID := int(claim["user_id"].(float64))
 
 	return userID
+
+}
+
+func (a *jwtService) ExtractTokenEmail(c echo.Context) string {
+	authHeader := c.Request().Header.Get(echo.HeaderAuthorization)
+
+	if !strings.Contains(authHeader, "Bearer") {
+		return ""
+	}
+
+	tokenString := ""
+	arrayToken := strings.Split(authHeader, " ")
+	if len(arrayToken) == 2 {
+		tokenString = arrayToken[1]
+	}
+
+	token, _ := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		_, ok := token.Method.(*jwt.SigningMethodHMAC)
+
+		if !ok {
+			return nil, errors.New("invalid token")
+		}
+
+		return []byte(constants.SecretKey), nil
+	})
+
+	claim, ok := token.Claims.(jwt.MapClaims)
+
+	if !ok || !token.Valid {
+		return ""
+	}
+
+	email := claim["email"].(string)
+
+	return email
 
 }
 
