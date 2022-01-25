@@ -37,11 +37,11 @@ func (s StructCtrlHomestay) GetAllHomestay() echo.HandlerFunc {
 	}
 }
 
-func (s StructCtrlHomestay) GetHostHomestay() echo.HandlerFunc {
+func (s StructCtrlHomestay) GetAllHostHomestay() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		// userId := ExtractTokenUserId(c)
 		userId := middlewares.NewAuth().ExtractTokenUserID(c)
-		res, err := s.repository.GetHostHomestay(userId)
+		res, err := s.repository.GetAllHostHomestay(userId)
 		if err != nil {
 			return c.JSON(http.StatusBadRequest, map[string]interface{}{
 				"message": "gagal gaes get all host homestay",
@@ -92,7 +92,7 @@ func (s StructCtrlHomestay) UpdateHomestay() echo.HandlerFunc {
 		// userId := ExtractTokenUserId(c)
 		userId := middlewares.NewAuth().ExtractTokenUserID(c)
 
-		fond, err := s.repository.GetHomestayId(userId)
+		fond, err := s.repository.GetHomestayIdByHostId(userId)
 		if err != nil {
 			return c.JSON(http.StatusBadRequest, map[string]interface{}{
 				"message": "gagal gaes menemukan id homestay",
@@ -128,7 +128,7 @@ func (s StructCtrlHomestay) DeleteHomestay() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		userId := middlewares.NewAuth().ExtractTokenUserID(c)
 
-		err := s.repository.DeleteHomestay(userId)
+		err := s.repository.DeleteHomestayByHostId(userId)
 		if err != nil {
 			return c.JSON(http.StatusBadRequest, map[string]interface{}{
 				"message": "gagal delete gas",
