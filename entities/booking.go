@@ -15,7 +15,6 @@ type Booking struct {
 	PaymentStatus string
 	InvoiceID     string
 	PaymentMethod string
-	BankID        string
 	PaymentURL    string
 	PaidAt        string
 	PriceBooking  int
