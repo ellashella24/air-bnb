@@ -133,8 +133,8 @@ func (a *jwtService) IsAdmin(next echo.HandlerFunc) echo.HandlerFunc {
 
 		claim, _ := token.Claims.(jwt.MapClaims)
 
-		admin := claim["admin"].(bool)
-		if !admin {
+		role := claim["role"]
+		if role != "admin" {
 			return c.JSON(http.StatusUnauthorized, map[string]interface{}{
 				"code":    http.StatusUnauthorized,
 				"message": "not admin",
