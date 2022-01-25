@@ -14,6 +14,7 @@ import (
 type Auth interface {
 	GenerateToken(userID int) (string, error)
 	ExtractTokenUserID(e echo.Context) int
+	ExtractTokenEmail(e echo.Context) string
 	IsAdmin(next echo.HandlerFunc) error
 }
 
@@ -75,6 +76,41 @@ func (a *jwtService) ExtractTokenUserID(c echo.Context) int {
 
 }
 
+func (a *jwtService) ExtractTokenEmail(c echo.Context) string {
+	authHeader := c.Request().Header.Get(echo.HeaderAuthorization)
+
+	if !strings.Contains(authHeader, "Bearer") {
+		return ""
+	}
+
+	tokenString := ""
+	arrayToken := strings.Split(authHeader, " ")
+	if len(arrayToken) == 2 {
+		tokenString = arrayToken[1]
+	}
+
+	token, _ := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		_, ok := token.Method.(*jwt.SigningMethodHMAC)
+
+		if !ok {
+			return nil, errors.New("invalid token")
+		}
+
+		return []byte(constants.SecretKey), nil
+	})
+
+	claim, ok := token.Claims.(jwt.MapClaims)
+
+	if !ok || !token.Valid {
+		return ""
+	}
+
+	email := claim["email"].(string)
+
+	return email
+
+}
+
 func (a *jwtService) IsAdmin(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		authHeader := c.Request().Header.Get(echo.HeaderAuthorization)
@@ -97,8 +133,8 @@ func (a *jwtService) IsAdmin(next echo.HandlerFunc) echo.HandlerFunc {
 
 		claim, _ := token.Claims.(jwt.MapClaims)
 
-		admin := claim["admin"].(bool)
-		if !admin {
+		role := claim["role"]
+		if role != "admin" {
 			return c.JSON(http.StatusUnauthorized, map[string]interface{}{
 				"code":    http.StatusUnauthorized,
 				"message": "not admin",
