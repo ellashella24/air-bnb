@@ -15,7 +15,7 @@ import (
 
 func main() {
 	config := configs.GetConfig()
-	utils.InitDB(config)
+	db := utils.InitDB(config)
 
 	e := echo.New()
 
