@@ -1,6 +1,7 @@
 package homestay
 
 import (
+	"air-bnb/delivery/middlewares"
 	"air-bnb/entities"
 	"air-bnb/repository/homestay"
 	"fmt"
@@ -39,7 +40,7 @@ func (s StructCtrlHomestay) GetAllHomestay() echo.HandlerFunc {
 func (s StructCtrlHomestay) GetHostHomestay() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		// userId := ExtractTokenUserId(c)
-		userId := 1
+		userId := middlewares.NewAuth().ExtractTokenUserID(c)
 		res, err := s.repository.GetHostHomestay(userId)
 		if err != nil {
 			return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -57,7 +58,7 @@ func (s StructCtrlHomestay) GetHostHomestay() echo.HandlerFunc {
 
 func (s StructCtrlHomestay) CreateHomestay() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		userId := 10
+		userId := middlewares.NewAuth().ExtractTokenUserID(c)
 
 		var homestay FormReqCreate
 		err := c.Bind(&homestay)
@@ -89,7 +90,7 @@ func (s StructCtrlHomestay) CreateHomestay() echo.HandlerFunc {
 func (s StructCtrlHomestay) UpdateHomestay() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		// userId := ExtractTokenUserId(c)
-		userId := 1
+		userId := middlewares.NewAuth().ExtractTokenUserID(c)
 
 		fond, err := s.repository.GetHomestayId(userId)
 		if err != nil {
@@ -125,7 +126,7 @@ func (s StructCtrlHomestay) UpdateHomestay() echo.HandlerFunc {
 
 func (s StructCtrlHomestay) DeleteHomestay() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		userId := 5
+		userId := middlewares.NewAuth().ExtractTokenUserID(c)
 
 		err := s.repository.DeleteHomestay(userId)
 		if err != nil {
