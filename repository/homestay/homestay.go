@@ -20,6 +20,8 @@ type InterfaceHomestay interface {
 	UpdateHomestay(homestay entities.Homestay) (entities.Homestay, error)
 	// DELETE
 	DeleteHomestayByHostId(id int) error
+	//GET HOMESTAY BY CITY
+	GetHomestayByCityId(city string) ([]entities.Homestay, error)
 }
 
 type homestay struct {
@@ -49,7 +51,6 @@ func (h *homestay) GetAllHostHomestay(id int) ([]entities.Homestay, error) {
 }
 
 func (h *homestay) CreteaHomestay(homestay entities.Homestay) (entities.Homestay, error) {
-
 	err := h.db.Save(&homestay).Error
 	if err != nil {
 		return homestay, err
@@ -59,7 +60,6 @@ func (h *homestay) CreteaHomestay(homestay entities.Homestay) (entities.Homestay
 
 func (h *homestay) GetHomestayIdByHostId(id int) (entities.Homestay, error) {
 	var homestay entities.Homestay
-	// err := h.db.First(&homestay, id).Error
 	err := h.db.Where("host_id = ?", id).Find(&homestay).Error
 	if err != nil {
 		return homestay, err
@@ -77,10 +77,18 @@ func (h *homestay) UpdateHomestay(homestay entities.Homestay) (entities.Homestay
 
 func (h *homestay) DeleteHomestayByHostId(id int) error {
 	var delete entities.Homestay
-	// err := h.db.Delete(&delete).Where("host_id = ?", id).Error
 	err := h.db.Where("host_id = ?", id).Delete(&delete).Error
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+func (h *homestay) GetHomestayByCityId(city string) ([]entities.Homestay, error) {
+	var homestay []entities.Homestay
+	err := h.db.Table("homestays").Select("homestays.*").Joins("join cities on homestays.city_id  = cities.id").Where("cities.name LIKE ?", city).Find(&homestay).Error
+	if err != nil {
+		return homestay, err
+	}
+	return homestay, nil
 }
