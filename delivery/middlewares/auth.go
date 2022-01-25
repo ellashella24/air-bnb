@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+	// "github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
 )
 
@@ -133,8 +134,8 @@ func (a *jwtService) IsAdmin(next echo.HandlerFunc) echo.HandlerFunc {
 
 		claim, _ := token.Claims.(jwt.MapClaims)
 
-		role := claim["role"]
-		if role != "admin" {
+		admin := claim["admin"].(bool)
+		if !admin {
 			return c.JSON(http.StatusUnauthorized, map[string]interface{}{
 				"code":    http.StatusUnauthorized,
 				"message": "not admin",
