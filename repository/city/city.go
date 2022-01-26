@@ -57,7 +57,7 @@ func (ur *cityRepository) UpdateCity(cityID int, updatedCity entities.City) (ent
 
 	err := ur.db.Where("id = ?", cityID).Find(&city).Error
 
-	if err != nil {
+	if err != nil || city.ID == 0 {
 		return city, err
 	}
 
