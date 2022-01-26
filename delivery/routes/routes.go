@@ -6,7 +6,11 @@ import (
 	"air-bnb/delivery/controllers/user"
 	"air-bnb/delivery/middlewares"
 
+	"air-bnb/constants"
+	controllers "air-bnb/delivery/controllers/homestay"
+
 	"github.com/go-playground/validator/v10"
+
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -42,4 +46,13 @@ func RegisterPath(e *echo.Echo, uc *user.UserController, cc *city.CityController
 	e.GET("/booking/history", bc.BookingByUserID(), middleware.JWT([]byte("secret123")))
 	e.GET("/booking/recap", bc.FindBookingByHostID(), middleware.JWT([]byte("secret123")))
 	e.PUT("/booking/checkout", bc.CheckOut(), middleware.JWT([]byte("secret123")))
+}
+
+func PathHomestay(e *echo.Echo, c controllers.StructCtrlHomestay) {
+
+	e.GET("/homestays", c.GetAllHomestay())
+	e.GET("/homestays/host", c.GetAllHostHomestay(), middleware.JWT([]byte(constants.SecretKey)))
+	e.PUT("homestays/update", c.UpdateHomestay(), middleware.JWT([]byte(constants.SecretKey)))
+	e.POST("homestays/create", c.CreateHomestay(), middleware.JWT([]byte(constants.SecretKey)))
+	e.DELETE("/homestays/delete", c.DeleteHomestay(), middleware.JWT([]byte(constants.SecretKey)))
 }
