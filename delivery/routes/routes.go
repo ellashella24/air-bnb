@@ -49,4 +49,5 @@ func PathHomestay(e *echo.Echo, c controllers.StructCtrlHomestay) {
 	e.PUT("homestays/update", c.UpdateHomestay(), middleware.JWT([]byte(constants.SecretKey)))
 	e.POST("homestays/create", c.CreateHomestay(), middleware.JWT([]byte(constants.SecretKey)))
 	e.DELETE("/homestays/delete", c.DeleteHomestay(), middleware.JWT([]byte(constants.SecretKey)))
+	e.GET("/homestays/", c.GetHomestayByCityId())
 }

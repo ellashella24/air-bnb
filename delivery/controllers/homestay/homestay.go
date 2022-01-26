@@ -4,10 +4,8 @@ import (
 	"air-bnb/delivery/middlewares"
 	"air-bnb/entities"
 	"air-bnb/repository/homestay"
-	"fmt"
 	"net/http"
 
-	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
 )
 
@@ -141,18 +139,21 @@ func (s StructCtrlHomestay) DeleteHomestay() echo.HandlerFunc {
 	}
 }
 
-//--------------------------------------------------------------------------------
-//TOKEN
-//--------------------------------------------------------------------------------
+func (s StructCtrlHomestay) GetHomestayByCityId() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		search := c.QueryParam("search")
 
-func ExtractTokenUserId(c echo.Context) int {
-	user := c.Get("user").(*jwt.Token)
-	// fmt.Println(user)
-	if user.Valid {
-		claims := user.Claims.(jwt.MapClaims)
-		userId := int(claims["userId"].(float64))
-		fmt.Println(claims)
-		return userId
+		res, err := s.repository.GetHomestayByCityId(search)
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"message": "ndak ada citynya",
+				"data":    err,
+			})
+		}
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message": "ada city",
+			"data":    res,
+		})
+
 	}
-	return -1
 }
