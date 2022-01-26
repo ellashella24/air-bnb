@@ -16,3 +16,7 @@ type CallbackRequest struct {
 	PaidAt        string `json:"paid_at"`
 	Status        string `json:"status"`
 }
+
+type CheckOutRequest struct {
+	InvoiceID string `json:"invoice_id"`
+}

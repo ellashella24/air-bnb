@@ -50,7 +50,11 @@ func (bc BookingController) Create(c echo.Context) error {
 
 	// data to create invoice,
 	ExternalID := fmt.Sprint("Invoice-", userID, "-", bookingRequest.HomeStayID, bookingRequest.CheckIn, rand.Intn(100))
-	var item, price, _ = bc.bookRepo.FindHomeStay(int(calcDays), int(bookingRequest.HomeStayID))
+	var item, price, errBooking = bc.bookRepo.FindHomeStay(int(calcDays), int(bookingRequest.HomeStayID))
+
+	if errBooking != nil {
+		return c.JSON(http.StatusNotFound, "Homestay tidak ditemukan, atau booking status not available")
+	}
 
 	customer, _ := bc.bookRepo.FindCustomer(userID)
 
@@ -116,4 +120,49 @@ func (bc BookingController) Callback(c echo.Context) error {
 	callBack, _ := bc.bookRepo.Update(callBackRequest.ExternalID, callBackData)
 
 	return c.JSON(http.StatusOK, callBack)
+}
+
+func (bc BookingController) BookingByUserID() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		userID := middlewares.NewAuth().ExtractTokenUserID(c)
+
+		res, _ := bc.bookRepo.FindBookingByUserID(userID)
+
+		if len(res) == 0 {
+			c.JSON(http.StatusNotFound, common.NewNotFoundResponse())
+		}
+
+		return c.JSON(http.StatusOK, res)
+	}
+}
+
+func (bc BookingController) FindBookingByHostID() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		hostID := middlewares.NewAuth().ExtractTokenUserID(c)
+
+		res, _ := bc.bookRepo.FindBookingByUserID(hostID)
+
+		if len(res) == 0 {
+			c.JSON(http.StatusNotFound, common.NewNotFoundResponse())
+		}
+
+		return c.JSON(http.StatusOK, res)
+	}
+}
+
+func (bc BookingController) CheckOut() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		var invoiceID CheckOutRequest
+		c.Bind(&invoiceID)
+
+		hostID := middlewares.NewAuth().ExtractTokenUserID(c)
+
+		_, err := bc.bookRepo.Checkout(invoiceID.InvoiceID, hostID)
+
+		if err != nil {
+			c.JSON(http.StatusNotFound, common.NewNotFoundResponse())
+		}
+
+		return c.JSON(http.StatusOK, common.NewSuccessOperationResponse())
+	}
 }
