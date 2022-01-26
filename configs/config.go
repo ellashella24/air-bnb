@@ -40,9 +40,9 @@ func initConfig() *AppConfig {
 	defaultConfig.Database.Driver = "mysql"
 	defaultConfig.Database.Name = "airbnb"
 	defaultConfig.Database.Address = "localhost"
-	defaultConfig.Database.Port = 3307
+	defaultConfig.Database.Port = 3306
 	defaultConfig.Database.Username = "root"
-	defaultConfig.Database.Password = "admin123"
+	defaultConfig.Database.Password = ""
 
 	viper.SetConfigType("yaml")
 	viper.SetConfigName("config")

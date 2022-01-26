@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"air-bnb/delivery/controllers/booking"
 	"air-bnb/delivery/controllers/city"
 	"air-bnb/delivery/controllers/user"
 	"air-bnb/delivery/middlewares"
@@ -18,7 +19,7 @@ func (cv *CustomValidator) Validate(i interface{}) error {
 	return cv.validator.Struct(i)
 }
 
-func RegisterPath(e *echo.Echo, uc *user.UserController, cc *city.CityController) {
+func RegisterPath(e *echo.Echo, uc *user.UserController, cc *city.CityController, bc *booking.BookingController) {
 	e.Validator = &CustomValidator{validator: validator.New()}
 
 	mw := middlewares.NewAuth()
@@ -35,4 +36,7 @@ func RegisterPath(e *echo.Echo, uc *user.UserController, cc *city.CityController
 	e.POST("/city", cc.CreateCity(), middleware.JWT([]byte("secret123")), mw.IsAdmin)
 	e.PUT("/city/:id", cc.UpdateCity(), middleware.JWT([]byte("secret123")), mw.IsAdmin)
 	e.DELETE("/city/:id", cc.DeleteCity(), middleware.JWT([]byte("secret123")), mw.IsAdmin)
+
+	e.POST("/booking", bc.Create, middleware.JWT([]byte("secret123")))
+	e.POST("/booking/callback", bc.Callback)
 }

@@ -16,7 +16,7 @@ type Booking struct {
 	InvoiceID     string
 	PaymentMethod string
 	PaymentURL    string
-	PaidAt        string
+	PaidAt        time.Time
 	PriceBooking  int
 	HomestayID    uint
 }
