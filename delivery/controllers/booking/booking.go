@@ -160,7 +160,7 @@ func (bc BookingController) CheckOut() echo.HandlerFunc {
 		_, err := bc.bookRepo.Checkout(invoiceID.InvoiceID, hostID)
 
 		if err != nil {
-			c.JSON(http.StatusNotFound, common.NewNotFoundResponse())
+			return c.JSON(http.StatusNotFound, common.NewNotFoundResponse())
 		}
 
 		return c.JSON(http.StatusOK, common.NewSuccessOperationResponse())

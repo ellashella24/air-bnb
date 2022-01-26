@@ -2,6 +2,8 @@ package booking
 
 import (
 	"air-bnb/entities"
+	"fmt"
+	"github.com/pkg/errors"
 	"github.com/xendit/xendit-go"
 	"gorm.io/gorm"
 )
@@ -74,13 +76,22 @@ func (br *BookingRepository) FindCustomer(id int) (xendit.InvoiceCustomer, error
 func (br *BookingRepository) Update(invoiceID string, booking entities.Booking) (entities.Booking, error) {
 
 	if booking.PaymentStatus == "EXPIRED" {
-		br.db.Table("homestays").Joins("join bookings on bookings.homestay_id = homestays.id").Where(
-			"booking_status", "not available",
-		).Update("booking_status", "available")
+		var bookingData entities.Booking
+		var homestay entities.Homestay
+		br.db.Where("invoice_id = ?", invoiceID).First(&bookingData)
+		err := br.db.Model(&homestay).Where("id = ?", bookingData.HomestayID).Update(
+			"booking_status", "available",
+		).Error
+
+		if err != nil || bookingData.ID == 0 {
+			return bookingData, errors.New("Not Found")
+		}
 	}
 
-	if err := br.db.Where("invoice_id = ?", invoiceID).Model(&booking).Updates(booking).Error; err != nil {
-		return booking, err
+	err := br.db.Where("invoice_id = ?", invoiceID).Model(&booking).Updates(booking).Error
+
+	if err != nil || booking.PaymentStatus == "PENDING" {
+		return booking, errors.New("Not found")
 	}
 
 	return booking, nil
@@ -89,7 +100,11 @@ func (br *BookingRepository) Update(invoiceID string, booking entities.Booking) 
 func (br *BookingRepository) FindBookingByUserID(id int) ([]entities.Booking, error) {
 	var booking []entities.Booking
 
-	br.db.Where("user_id = ?", id).Find(&booking)
+	err := br.db.Where("user_id = ?", id).Find(&booking).Error
+
+	if err != nil || len(booking) == 0 {
+		return booking, errors.New("Not Found")
+	}
 
 	return booking, nil
 
@@ -98,9 +113,14 @@ func (br *BookingRepository) FindBookingByUserID(id int) ([]entities.Booking, er
 func (br *BookingRepository) FindBookingByHostID(id int) ([]entities.Booking, error) {
 	var booking []entities.Booking
 
-	br.db.Table("bookings").Joins("join homestays on booking.homestay_id = homestays.id").Where(
+	err := br.db.Table("bookings").Joins("join homestays on bookings.homestay_id = homestays.id").Where(
 		"homestays.host_id = ?", id,
-	).Find(&booking)
+	).Find(&booking).Error
+
+	if err != nil || len(booking) == 0 {
+		return booking, errors.New("not found")
+	}
+	fmt.Println("ini booking", booking)
 
 	return booking, nil
 }
@@ -110,17 +130,13 @@ func (br *BookingRepository) Checkout(invoiceID string, hostID int) (entities.Ho
 	var booking entities.Booking
 
 	err := br.db.Where("invoice_id = ?", invoiceID).First(&booking).Error
-
 	if err != nil {
-		return homestay, err
+		return homestay, errors.New("not found")
 	}
 
-	err = br.db.Model(homestay).Where("id = ? and host_id = ?", booking.HomestayID, hostID).Update(
+	br.db.Model(&homestay).Where("id = ? and host_id = ?", booking.HomestayID, hostID).Update(
 		"booking_status", "available",
-	).Error
-	if err != nil {
-		return homestay, err
-	}
+	)
 
 	return homestay, nil
 
