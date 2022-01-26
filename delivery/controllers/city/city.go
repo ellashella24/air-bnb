@@ -1,6 +1,7 @@
 package city
 
 import (
+	"air-bnb/delivery/common"
 	"air-bnb/entities"
 	"air-bnb/repository/city"
 	"net/http"
@@ -22,10 +23,19 @@ func (uc *CityController) GetAllCity() echo.HandlerFunc {
 		res, err := uc.cityRepo.GetAllCity()
 
 		if err != nil || len(res) == 0 {
-			c.JSON(http.StatusBadRequest, "error")
+			return c.JSON(http.StatusNotFound, common.NewNotFoundResponse())
 		}
 
-		return c.JSON(http.StatusOK, res)
+		formatCity := CityFormatResponse{}
+		formatCities := []CityFormatResponse{}
+
+		for i := 0; i < len(res); i++ {
+			formatCity.ID = res[i].ID
+			formatCity.Name = res[i].Name
+			formatCities = append(formatCities, formatCity)
+		}
+
+		return c.JSON(http.StatusOK, common.SuccessResponse(formatCities))
 	}
 }
 
@@ -36,10 +46,15 @@ func (uc *CityController) GetCityByID() echo.HandlerFunc {
 		res, err := uc.cityRepo.GetCityByID(cityID)
 
 		if err != nil || res.ID == 0 {
-			c.JSON(http.StatusBadRequest, "error")
+			return c.JSON(http.StatusNotFound, common.NewNotFoundResponse())
 		}
 
-		return c.JSON(http.StatusOK, res)
+		formatCity := CityFormatResponse{
+			ID:   res.ID,
+			Name: res.Name,
+		}
+
+		return c.JSON(http.StatusOK, common.SuccessResponse(formatCity))
 	}
 }
 
@@ -52,7 +67,7 @@ func (uc *CityController) CreateCity() echo.HandlerFunc {
 		err := c.Validate(&cityRegisterReq)
 
 		if err != nil {
-			return c.JSON(http.StatusBadRequest, "error")
+			return c.JSON(http.StatusBadRequest, common.NewBadRequestResponse())
 		}
 
 		newCity := entities.City{}
@@ -61,10 +76,15 @@ func (uc *CityController) CreateCity() echo.HandlerFunc {
 		res, err := uc.cityRepo.CreateCity(newCity)
 
 		if err != nil {
-			return c.JSON(http.StatusBadRequest, "error")
+			return c.JSON(http.StatusBadRequest, common.NewBadRequestResponse())
 		}
 
-		return c.JSON(http.StatusOK, res)
+		formatCity := CityFormatResponse{
+			ID:   res.ID,
+			Name: res.Name,
+		}
+
+		return c.JSON(http.StatusOK, common.SuccessResponse(formatCity))
 	}
 }
 
@@ -79,7 +99,7 @@ func (uc *CityController) UpdateCity() echo.HandlerFunc {
 		err := c.Validate(&cityUpdateReq)
 
 		if err != nil {
-			return c.JSON(http.StatusBadRequest, "error")
+			return c.JSON(http.StatusBadRequest, common.NewBadRequestResponse())
 		}
 
 		updatedCity := entities.City{}
@@ -87,11 +107,16 @@ func (uc *CityController) UpdateCity() echo.HandlerFunc {
 
 		res, err := uc.cityRepo.UpdateCity(cityID, updatedCity)
 
-		if err != nil {
-			return c.JSON(http.StatusBadRequest, "can't update city")
+		if err != nil || res.Name == "" {
+			return c.JSON(http.StatusBadRequest, common.NewBadRequestResponse())
 		}
 
-		return c.JSON(http.StatusOK, res)
+		formatCity := CityFormatResponse{
+			ID:   uint(cityID),
+			Name: res.Name,
+		}
+
+		return c.JSON(http.StatusOK, common.SuccessResponse(formatCity))
 	}
 }
 
@@ -102,9 +127,9 @@ func (uc *CityController) DeleteCity() echo.HandlerFunc {
 		_, err := uc.cityRepo.DeleteCity(cityID)
 
 		if err != nil {
-			return c.JSON(http.StatusBadRequest, "can't delete city")
+			return c.JSON(http.StatusBadRequest, common.NewBadRequestResponse())
 		}
 
-		return c.JSON(http.StatusOK, "success delete city")
+		return c.JSON(http.StatusOK, common.NewSuccessOperationResponse())
 	}
 }
