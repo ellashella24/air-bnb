@@ -20,3 +20,8 @@ type CallbackRequest struct {
 type CheckOutRequest struct {
 	InvoiceID string `json:"invoice_id"`
 }
+
+type ResecheduleRequest struct {
+	InvoiceID string `json:"invoiceID"`
+	CheckIn   string `json:"check_in"`
+}

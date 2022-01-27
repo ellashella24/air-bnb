@@ -37,7 +37,7 @@ func main() {
 	ctrl := controllers.NewControllerHomestay(rp)
 
 	routes.PathHomestay(e, *ctrl)
-	routes.RegisterPath(e, userController, cityController, bc)
+	routes.RegisterPath(e, userController, cityController, bookingController)
 
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%v", config.Port)))
 

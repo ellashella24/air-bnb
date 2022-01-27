@@ -44,7 +44,7 @@ func TestSetup(t *testing.T) {
 		Price:          100000,
 		Booking_Status: "available",
 		HostID:         1,
-		City_id:        1,
+		CityID:         1,
 	}
 
 	db.Create(&user)
@@ -291,7 +291,39 @@ func TestCheckout(t *testing.T) {
 
 			db.Model(booking).Where("id = ?", 1).Update("invoice_id", "1")
 
-			_, err := bookingRepo.Checkout("10", 1)
+			_, err := bookingRepo.Checkout("10", 10)
+
+			assert.NotNil(t, err)
+
+		},
+	)
+
+}
+
+func TestReschedule(t *testing.T) {
+	config := configs.GetConfig()
+	db := utils.InitDB(config)
+
+	bookingRepo := NewBookingRepository(db)
+
+	t.Run(
+		"succes case", func(t *testing.T) {
+
+			checkIn, _ := time.Parse("2006-01-02", "2022-02-01")
+
+			res, _ := bookingRepo.Reschedule(1, "1", checkIn)
+
+			assert.Equal(t, time.Date(2022, time.February, 2, 0, 0, 0, 0, time.UTC), res.CheckOut)
+
+		},
+	)
+
+	t.Run(
+		"error case", func(t *testing.T) {
+
+			checkIn, _ := time.Parse("2022-01-01", "2022-02-01")
+
+			_, err := bookingRepo.Reschedule(1, "100", checkIn)
 
 			assert.NotNil(t, err)
 

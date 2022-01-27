@@ -6,6 +6,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/xendit/xendit-go"
 	"gorm.io/gorm"
+	"time"
 )
 
 type Booking interface {
@@ -15,7 +16,10 @@ type Booking interface {
 	Update(bookingID string, booking entities.Booking) (entities.Booking, error)
 	FindBookingByUserID(id int) ([]entities.Booking, error)
 	FindBookingByHostID(id int) ([]entities.Booking, error)
-	Checkout(invoiceID string, hostID int) (entities.Homestay, error)
+	Checkout(invoiceID string, userID int) (entities.Homestay, error)
+	Reschedule(userID int, invoiceID string, checkIN time.Time) (
+		entities.Booking, error,
+	)
 }
 
 type BookingRepository struct {
@@ -120,24 +124,45 @@ func (br *BookingRepository) FindBookingByHostID(id int) ([]entities.Booking, er
 	if err != nil || len(booking) == 0 {
 		return booking, errors.New("not found")
 	}
-	fmt.Println("ini booking", booking)
 
 	return booking, nil
 }
 
-func (br *BookingRepository) Checkout(invoiceID string, hostID int) (entities.Homestay, error) {
+func (br *BookingRepository) Checkout(invoiceID string, userID int) (entities.Homestay, error) {
 	var homestay entities.Homestay
 	var booking entities.Booking
 
-	err := br.db.Where("invoice_id = ?", invoiceID).First(&booking).Error
+	err := br.db.Where("invoice_id = ? and user_id = ?", invoiceID, userID).First(&booking).Error
 	if err != nil {
 		return homestay, errors.New("not found")
 	}
 
-	br.db.Model(&homestay).Where("id = ? and host_id = ?", booking.HomestayID, hostID).Update(
+	br.db.Where("id=?", booking.HomestayID).First(&homestay)
+
+	br.db.Model(&homestay).Where("id = ? and host_id = ?", booking.HomestayID, homestay.HostID).Update(
 		"booking_status", "available",
 	)
 
 	return homestay, nil
 
+}
+
+func (br *BookingRepository) Reschedule(userID int, invoiceID string, checkIn time.Time) (
+	entities.Booking, error,
+) {
+	var booking entities.Booking
+	err := br.db.Where("invoice_id = ?", invoiceID).First(&booking).Error
+
+	if err != nil {
+		return booking, err
+	}
+
+	duration := booking.CheckOut.Sub(booking.CheckIn).Hours()
+	fmt.Println(duration)
+	checkOut := checkIn.Add(time.Hour * time.Duration(24))
+
+	br.db.Model(&booking).Where("invoice_id = ?", booking.InvoiceID).Update("check_in", checkIn)
+	br.db.Model(&booking).Where("invoice_id = ?", booking.InvoiceID).Update("check_out", checkOut)
+
+	return booking, nil
 }

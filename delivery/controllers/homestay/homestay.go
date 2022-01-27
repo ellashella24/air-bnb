@@ -24,16 +24,20 @@ func (s StructCtrlHomestay) GetAllHomestay() echo.HandlerFunc {
 
 		res, err := s.repository.GetallHomestay()
 		if err != nil {
-			return c.JSON(http.StatusBadRequest, map[string]interface{}{
-				"message": "gagal gaes get all homestay",
-				"data":    err,
-			})
+			return c.JSON(
+				http.StatusBadRequest, map[string]interface{}{
+					"message": "gagal gaes get all homestay",
+					"data":    err,
+				},
+			)
 		}
 
-		return c.JSON(http.StatusOK, map[string]interface{}{
-			"message": "success get all homestay",
-			"data":    res,
-		})
+		return c.JSON(
+			http.StatusOK, map[string]interface{}{
+				"message": "success get all homestay",
+				"data":    res,
+			},
+		)
 	}
 }
 
@@ -43,15 +47,19 @@ func (s StructCtrlHomestay) GetAllHostHomestay() echo.HandlerFunc {
 		userId := middlewares.NewAuth().ExtractTokenUserID(c)
 		res, err := s.repository.GetAllHostHomestay(userId)
 		if err != nil {
-			return c.JSON(http.StatusBadRequest, map[string]interface{}{
-				"message": "gagal gaes get all host homestay",
-				"data":    err,
-			})
+			return c.JSON(
+				http.StatusBadRequest, map[string]interface{}{
+					"message": "gagal gaes get all host homestay",
+					"data":    err,
+				},
+			)
 		}
-		return c.JSON(http.StatusOK, map[string]interface{}{
-			"message": "success get all host homestay",
-			"data":    res,
-		})
+		return c.JSON(
+			http.StatusOK, map[string]interface{}{
+				"message": "success get all host homestay",
+				"data":    res,
+			},
+		)
 	}
 
 }
@@ -63,27 +71,33 @@ func (s StructCtrlHomestay) CreateHomestay() echo.HandlerFunc {
 		var homestay FormReqCreate
 		err := c.Bind(&homestay)
 		if err != nil {
-			return c.JSON(http.StatusBadRequest, map[string]interface{}{
-				"message": "salah input gaess",
-			})
+			return c.JSON(
+				http.StatusBadRequest, map[string]interface{}{
+					"message": "salah input gaess",
+				},
+			)
 		}
 		var create entities.Homestay
 		create.Name = homestay.Name
 		create.Price = homestay.Price
-		create.City_id = homestay.CityId
+		create.CityID = homestay.CityId
 		create.HostID = uint(userId)
 
 		res, err2 := s.repository.CreteaHomestay(create)
 		if err2 != nil {
-			return c.JSON(http.StatusBadRequest, map[string]interface{}{
-				"message": "gagal create homestay gas",
-				"data":    err2,
-			})
+			return c.JSON(
+				http.StatusBadRequest, map[string]interface{}{
+					"message": "gagal create homestay gas",
+					"data":    err2,
+				},
+			)
 		}
-		return c.JSON(http.StatusOK, map[string]interface{}{
-			"message": "ok mantap create success",
-			"data":    res,
-		})
+		return c.JSON(
+			http.StatusOK, map[string]interface{}{
+				"message": "ok mantap create success",
+				"data":    res,
+			},
+		)
 	}
 }
 
@@ -94,32 +108,40 @@ func (s StructCtrlHomestay) UpdateHomestay() echo.HandlerFunc {
 
 		fond, err := s.repository.GetHomestayIdByHostId(userId)
 		if err != nil {
-			return c.JSON(http.StatusBadRequest, map[string]interface{}{
-				"message": "gagal gaes menemukan id homestay",
-			})
+			return c.JSON(
+				http.StatusBadRequest, map[string]interface{}{
+					"message": "gagal gaes menemukan id homestay",
+				},
+			)
 		}
 
 		update := FormReqUpdate{}
 		err2 := c.Bind(&update)
 		if err2 != nil {
-			return c.JSON(http.StatusBadRequest, map[string]interface{}{
-				"message": "salah input gaess",
-			})
+			return c.JSON(
+				http.StatusBadRequest, map[string]interface{}{
+					"message": "salah input gaess",
+				},
+			)
 		}
 		fond.Name = update.Name
 		fond.Price = update.Price
 
 		res, err := s.repository.UpdateHomestay(fond)
 		if err != nil {
-			return c.JSON(http.StatusBadRequest, map[string]interface{}{
-				"message": "gagal save update gas",
-				"data":    err,
-			})
+			return c.JSON(
+				http.StatusBadRequest, map[string]interface{}{
+					"message": "gagal save update gas",
+					"data":    err,
+				},
+			)
 		}
-		return c.JSON(http.StatusOK, map[string]interface{}{
-			"message": "ok mantap update success",
-			"data":    res,
-		})
+		return c.JSON(
+			http.StatusOK, map[string]interface{}{
+				"message": "ok mantap update success",
+				"data":    res,
+			},
+		)
 	}
 
 }
@@ -130,14 +152,18 @@ func (s StructCtrlHomestay) DeleteHomestay() echo.HandlerFunc {
 
 		err := s.repository.DeleteHomestayByHostId(userId)
 		if err != nil {
-			return c.JSON(http.StatusBadRequest, map[string]interface{}{
-				"message": "gagal delete gas",
-				"data":    err,
-			})
+			return c.JSON(
+				http.StatusBadRequest, map[string]interface{}{
+					"message": "gagal delete gas",
+					"data":    err,
+				},
+			)
 		}
-		return c.JSON(http.StatusOK, map[string]interface{}{
-			"message": "delete success gaess",
-		})
+		return c.JSON(
+			http.StatusOK, map[string]interface{}{
+				"message": "delete success gaess",
+			},
+		)
 	}
 }
 
