@@ -5,8 +5,8 @@ import (
 	"air-bnb/delivery/middlewares"
 	"air-bnb/entities"
 	"air-bnb/repository/homestay"
-	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -71,12 +71,11 @@ func (s StructCtrlHomestay) UpdateHomestay() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		// userId := ExtractTokenUserId(c)
 		userId := middlewares.NewAuth().ExtractTokenUserID(c)
-
-		fond, err := s.repository.GetHomestayIdByHostId(userId)
+		homestayId, _ := strconv.Atoi(c.Param("id"))
+		fond, err := s.repository.GetHomestayIdByHostId(userId, homestayId)
 		if err != nil {
 			return c.JSON(http.StatusBadRequest, common.ErrorResponse(400, "host ID not found"))
 		}
-		fmt.Println(fond)
 		update := FormReqUpdate{}
 		err2 := c.Bind(&update)
 		if err2 != nil {
@@ -84,10 +83,10 @@ func (s StructCtrlHomestay) UpdateHomestay() echo.HandlerFunc {
 		}
 		fond.Name = update.Name
 		fond.Price = update.Price
-
+		fond.City_id = update.CityId
 		res, err := s.repository.UpdateHomestay(fond)
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, common.ErrorResponse(500, "failed update homestay"))
+			return c.JSON(http.StatusInternalServerError, err)
 		}
 		return c.JSON(http.StatusOK, common.SuccessResponse(res))
 	}
@@ -97,17 +96,12 @@ func (s StructCtrlHomestay) UpdateHomestay() echo.HandlerFunc {
 func (s StructCtrlHomestay) DeleteHomestay() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		userId := middlewares.NewAuth().ExtractTokenUserID(c)
-
-		err := s.repository.DeleteHomestayByHostId(userId)
+		homestayId, _ := strconv.Atoi(c.Param("id"))
+		err := s.repository.DeleteHomestayByHostId(userId, homestayId)
 		if err != nil {
-			return c.JSON(http.StatusBadRequest, map[string]interface{}{
-				"message": "gagal delete gas",
-				"data":    err,
-			})
+			return c.JSON(http.StatusBadRequest, common.ErrorResponse(400, "host/homestay ID tidak ditemukan"))
 		}
-		return c.JSON(http.StatusOK, map[string]interface{}{
-			"message": "delete success gaess",
-		})
+		return c.JSON(http.StatusOK, common.NewSuccessOperationResponse())
 	}
 }
 
@@ -117,15 +111,9 @@ func (s StructCtrlHomestay) GetHomestayByCityId() echo.HandlerFunc {
 
 		res, err := s.repository.GetHomestayByCityId(search)
 		if err != nil {
-			return c.JSON(http.StatusBadRequest, map[string]interface{}{
-				"message": "ndak ada citynya",
-				"data":    err,
-			})
+			return c.JSON(http.StatusBadRequest, common.ErrorResponse(400, "kota tidak ditemukan"))
 		}
-		return c.JSON(http.StatusOK, map[string]interface{}{
-			"message": "ada city",
-			"data":    res,
-		})
+		return c.JSON(http.StatusOK, common.SuccessResponse(res))
 
 	}
 }
