@@ -4,17 +4,7 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="32ccbc6a-75d9-4716-be50-b59819ed6f2e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/delivery/controllers/booking/booking_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/delivery/controllers/booking/booking_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/delivery/routes/routes.go" beforeDir="false" afterPath="$PROJECT_DIR$/delivery/routes/routes.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/entities/homestay.go" beforeDir="false" afterPath="$PROJECT_DIR$/entities/homestay.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/repository/booking/booking_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/repository/booking/booking_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/repository/homestay/homestay.go" beforeDir="false" afterPath="$PROJECT_DIR$/repository/homestay/homestay.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/repository/homestay/homestay_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/repository/homestay/homestay_test.go" afterDir="false" />
-    </list>
+    <list default="true" id="32ccbc6a-75d9-4716-be50-b59819ed6f2e" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -80,6 +70,14 @@
     </key>
   </component>
   <component name="RunManager" selected="Go Build.go build air-bnb">
+    <configuration default="true" type="GoApplicationRunConfiguration" factoryName="Go Application">
+      <module name="air-bnb" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="FILE" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
     <configuration name="go build air-bnb" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="air-bnb" />
       <working_directory value="$PROJECT_DIR$" />
@@ -99,6 +97,15 @@
       <filePath value="$PROJECT_DIR$" />
       <framework value="gotest" />
       <pattern value="^\QTestReschedule\E$" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="GoTestRunConfiguration" factoryName="Go Test">
+      <module name="air-bnb" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="DIRECTORY" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
       <method v="2" />
     </configuration>
     <configuration name="go test air-bnb" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">

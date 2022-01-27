@@ -147,7 +147,7 @@ func (bc BookingController) FindBookingByHostID() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		hostID := middlewares.NewAuth().ExtractTokenUserID(c)
 
-		res, err := bc.bookRepo.FindBookingByUserID(hostID)
+		res, err := bc.bookRepo.FindBookingByHostID(hostID)
 
 		if err != nil || len(res) == 0 {
 			return c.JSON(http.StatusNotFound, common.NewNotFoundResponse())
