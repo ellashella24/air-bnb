@@ -1,12 +1,13 @@
 package homestay
 
 type FormReqUpdate struct {
-	Name  string
-	Price int
+	Name   string `json:"name"`
+	Price  int    `json:"price"`
+	CityId uint   `json:"cityid"`
 }
 
 type FormReqCreate struct {
-	Name   string
-	Price  int
-	CityId uint
+	Name   string `json:"name"`
+	Price  int    `json:"price"`
+	CityId uint   `json:"cityid"`
 }
