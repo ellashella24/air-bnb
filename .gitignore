@@ -1,5 +1,2 @@
 *.env
-Dockerfile
-docker-compose.yaml
 *.out
-configs/
