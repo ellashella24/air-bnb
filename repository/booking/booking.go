@@ -3,10 +3,11 @@ package booking
 import (
 	"air-bnb/entities"
 	"fmt"
+	"time"
+
 	"github.com/pkg/errors"
 	"github.com/xendit/xendit-go"
 	"gorm.io/gorm"
-	"time"
 )
 
 type Booking interface {
