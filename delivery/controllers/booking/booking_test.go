@@ -555,7 +555,7 @@ func (mb mockBookingRepository) Checkout(invoiceID string, userId int) (entities
 		Price:          100000,
 		Booking_Status: "Available",
 		HostID:         1,
-		CityID:         1,
+		City_id:         1,
 		BookingID:      nil,
 	}, nil
 }
@@ -654,7 +654,7 @@ func (mf mockFalseBookingRepository) Checkout(invoiceID string, userID int) (ent
 		Price:          100000,
 		Booking_Status: "Available",
 		HostID:         1,
-		CityID:         1,
+		City_id:         1,
 		BookingID:      nil,
 	}, errors.New("error")
 }

@@ -9,6 +9,6 @@ type Homestay struct {
 	Price          int
 	Booking_Status string `gorm:"default:available"`
 	HostID         uint
-	CityID         uint
+	City_id         uint
 	BookingID      []Booking
 }

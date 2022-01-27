@@ -44,72 +44,91 @@ func TestHomestay(t *testing.T) {
 	// dummyHomestay.Name = "test1"
 	// dummyHomestay.Price = 1000
 
-	t.Run("CreateHomestay", func(t *testing.T) {
-		var dummy entities.Homestay
-		dummy.Name = "test1"
-		dummy.Price = 1000
-		dummy.HostID = 1
-		dummy.City_id = 1
+	t.Run(
+		"CreateHomestay", func(t *testing.T) {
 
-		res, err := rp.CreteaHomestay(dummy)
-		assert.Nil(t, err)
-		assert.Equal(t, "test1", res.Name)
-	})
+			db.AutoMigrate(&entities.Homestay{})
+			var dummy entities.Homestay
+			dummy.Name = "test1"
+			dummy.Price = 1000
+			dummy.HostID = 1
+			dummy.City_id = 1
 
-	t.Run("GetallHomestay", func(t *testing.T) {
-		res, err := rp.GetallHomestay()
-		assert.Nil(t, err)
-		assert.Equal(t, "test1", res[0].Name)
+			res, err := rp.CreteaHomestay(dummy)
+			assert.Nil(t, err)
+			assert.Equal(t, "test1", res.Name)
+		},
+	)
 
-	})
+	t.Run(
+		"GetallHomestay", func(t *testing.T) {
+			res, err := rp.GetallHomestay()
+			assert.Nil(t, err)
+			assert.Equal(t, "test1", res[0].Name)
 
-	t.Run("GetallHomestayHost", func(t *testing.T) {
-		res, err := rp.GetAllHostHomestay(1)
-		assert.Nil(t, err)
-		assert.Equal(t, "test1", res[0].Name)
-	})
+		},
+	)
 
-	t.Run("GethomestayIdByHostId", func(t *testing.T) {
-		res, _ := rp.GetHomestayIdByHostId(1, 1)
+	t.Run(
+		"GetallHomestayHost", func(t *testing.T) {
+			res, err := rp.GetAllHostHomestay(1)
+			assert.Nil(t, err)
+			assert.Equal(t, "test1", res[0].Name)
+		},
+	)
 
-		assert.Equal(t, "test1", res.Name)
-	})
-	t.Run("UpdateHomestay", func(t *testing.T) {
-		var dummy entities.Homestay
-		dummy.Name = "test2"
-		dummy.Price = 1000
-		dummy.HostID = 1
-		dummy.City_id = 1
-		res, err := rp.UpdateHomestay(dummy)
-		assert.Nil(t, err)
-		assert.Equal(t, "test2", res.Name)
-	})
+	t.Run(
+		"GethomestayIdByHostId", func(t *testing.T) {
+			res, _ := rp.GetHomestayIdByHostId(1, 1)
 
-	t.Run("DeleteHomestay", func(t *testing.T) {
+			assert.Equal(t, "test1", res.Name)
+		},
+	)
+	t.Run(
+		"UpdateHomestay", func(t *testing.T) {
+			var dummy entities.Homestay
+			dummy.Name = "test2"
+			dummy.Price = 1000
+			dummy.HostID = 1
+			dummy.City_id = 1
+			res, err := rp.UpdateHomestay(dummy)
+			assert.Nil(t, err)
+			assert.Equal(t, "test2", res.Name)
+		},
+	)
 
-		err := rp.DeleteHomestayByHostId(1, 1)
-		assert.Nil(t, err)
-	})
+	t.Run(
+		"DeleteHomestay", func(t *testing.T) {
 
-	t.Run("GetHomestayByCityId", func(t *testing.T) {
-		mockCity := entities.City{Name: "padang"}
-		createCity, _ := cityRepo.CreateCity(mockCity)
+			err := rp.DeleteHomestayByHostId(1, 1)
+			assert.Nil(t, err)
+		},
+	)
 
-		mockUser := entities.User{Name: "User 1", Email: "user1@mail.com", Password: "user1", Role: "member"}
-		createUser, _ := userRepo.CreateUser(mockUser)
+	t.Run(
+		"GetHomestayByCityId", func(t *testing.T) {
+			mockCity := entities.City{Name: "padang"}
+			createCity, _ := cityRepo.CreateCity(mockCity)
 
-		mockHomestay := entities.Homestay{Name: "Homestay 1", Price: 1000, Booking_Status: "available", HostID: createUser.ID, City_id: createCity.ID}
-		_, _ = homestayRepo.CreteaHomestay(mockHomestay)
+			mockUser := entities.User{Name: "User 1", Email: "user1@mail.com", Password: "user1", Role: "member"}
+			createUser, _ := userRepo.CreateUser(mockUser)
 
-		res, _ := homestayRepo.GetHomestayByCityId(createCity.Name)
+			mockHomestay := entities.Homestay{
+				Name: "Homestay 1", Price: 1000, Booking_Status: "available", HostID: createUser.ID,
+				City_id: createCity.ID,
+			}
+			_, _ = homestayRepo.CreteaHomestay(mockHomestay)
 
-		assert.Equal(t, "test2", res[0].Name)
+			res, _ := homestayRepo.GetHomestayByCityId(createCity.Name)
 
-		// var cities
-		// res, _ := rp.GetHomestayByCityId("hotel")
-		// fmt.Println(res)
-		// assert.Equal(t, "test1", res)
-	})
+			assert.Equal(t, "test2", res[0].Name)
+
+			// var cities
+			// res, _ := rp.GetHomestayByCityId("hotel")
+			// fmt.Println(res)
+			// assert.Equal(t, "test1", res)
+		},
+	)
 }
 
 func TestHomestayFalse(t *testing.T) {
@@ -138,76 +157,94 @@ func TestHomestayFalse(t *testing.T) {
 	dummyHomestay.Name = "homestay2"
 	dummyHomestay.Price = 1000
 
-	t.Run("CreateHomestayFalse", func(t *testing.T) {
-		var dummy entities.Homestay
-		dummy.Name = "test1"
-		dummy.Price = 1000
-		dummy.HostID = 1
-		dummy.City_id = 1
-		db.Migrator().DropTable(&entities.Homestay{})
-		// db.AutoMigrate(&entities.Homestay{})
-		res, err := rp.CreteaHomestay(dummy)
-		assert.NotNil(t, err)
-		// assert.Nil(t, res)
-		assert.Equal(t, uint(0), res.ID)
+	t.Run(
+		"CreateHomestayFalse", func(t *testing.T) {
+			var dummy entities.Homestay
+			dummy.Name = "test1"
+			dummy.Price = 1000
+			dummy.HostID = 1
+			dummy.City_id = 1
+			db.Migrator().DropTable(&entities.Homestay{})
+			// db.AutoMigrate(&entities.Homestay{})
+			res, err := rp.CreteaHomestay(dummy)
+			assert.NotNil(t, err)
+			// assert.Nil(t, res)
+			assert.Equal(t, uint(0), res.ID)
 
-	})
+		},
+	)
 
-	t.Run("GetAllHomestayFalse", func(t *testing.T) {
+	t.Run(
+		"GetAllHomestayFalse", func(t *testing.T) {
 
-		res, err := rp.GetallHomestay()
-		assert.Equal(t, 0, len(res))
-		assert.Equal(t, errors.New("nilai kosong"), err)
+			res, err := rp.GetallHomestay()
+			assert.Equal(t, 0, len(res))
+			assert.Equal(t, errors.New("nilai kosong"), err)
 
-	})
+		},
+	)
 
-	t.Run("GetAllHostHomestayFalse", func(t *testing.T) {
+	t.Run(
+		"GetAllHostHomestayFalse", func(t *testing.T) {
 
-		res, err := rp.GetAllHostHomestay(2)
-		assert.Equal(t, 0, len(res))
-		assert.Equal(t, errors.New("nilai kosong"), err)
+			res, err := rp.GetAllHostHomestay(2)
+			assert.Equal(t, 0, len(res))
+			assert.Equal(t, errors.New("nilai kosong"), err)
 
-	})
+		},
+	)
 
-	t.Run("UpdateHomestay", func(t *testing.T) {
-		var update entities.Homestay
-		update.Name = "homestay2"
-		update.Price = 2000
-		update.HostID = 1
-		update.City_id = 1
+	t.Run(
+		"UpdateHomestay", func(t *testing.T) {
+			var update entities.Homestay
+			update.Name = "homestay2"
+			update.Price = 2000
+			update.HostID = 1
+			update.City_id = 1
 
-		res, _ := rp.UpdateHomestay(update)
-		assert.Equal(t, dummyHomestay.Name, res.Name)
-		// assert.Nil(t, err)
+			res, _ := rp.UpdateHomestay(update)
+			assert.Equal(t, dummyHomestay.Name, res.Name)
+			// assert.Nil(t, err)
 
-	})
+		},
+	)
 
-	t.Run("getHomestayHost", func(t *testing.T) {
-		res, _ := rp.GetAllHostHomestay(2)
-		// assert.Nil(t, err)
-		assert.Equal(t, 0, len(res))
-	})
-	t.Run("deleteHomestayByIdFalse", func(t *testing.T) {
-		err := rp.DeleteHomestayByHostId(10, 2)
-		// assert.Nil(t, err)
-		assert.Equal(t, errors.New("gak ketemu idnya"), err)
-	})
+	t.Run(
+		"getHomestayHost", func(t *testing.T) {
+			res, _ := rp.GetAllHostHomestay(2)
+			// assert.Nil(t, err)
+			assert.Equal(t, 0, len(res))
+		},
+	)
+	t.Run(
+		"deleteHomestayByIdFalse", func(t *testing.T) {
+			err := rp.DeleteHomestayByHostId(10, 2)
+			// assert.Nil(t, err)
+			assert.Equal(t, errors.New("gak ketemu idnya"), err)
+		},
+	)
 
-	t.Run("getHomestayHost", func(t *testing.T) {
-		res, _ := rp.GetAllHostHomestay(2)
-		// assert.Nil(t, err)
-		assert.Equal(t, 0, len(res))
-	})
+	t.Run(
+		"getHomestayHost", func(t *testing.T) {
+			res, _ := rp.GetAllHostHomestay(2)
+			// assert.Nil(t, err)
+			assert.Equal(t, 0, len(res))
+		},
+	)
 
-	t.Run("GethomestayIdByHostIdFalse", func(t *testing.T) {
-		_, err := rp.GetHomestayIdByHostId(2, 2)
+	t.Run(
+		"GethomestayIdByHostIdFalse", func(t *testing.T) {
+			_, err := rp.GetHomestayIdByHostId(2, 2)
 
-		assert.Equal(t, errors.New("gak ketemu idnya"), err)
-	})
+			assert.Equal(t, errors.New("gak ketemu idnya"), err)
+		},
+	)
 
-	t.Run("GetHomestayByCityIdFalse", func(t *testing.T) {
-		_, err := rp.GetHomestayByCityId("goa")
+	t.Run(
+		"GetHomestayByCityIdFalse", func(t *testing.T) {
+			_, err := rp.GetHomestayByCityId("goa")
 
-		assert.Equal(t, errors.New("kota tidak ditemukan"), err)
-	})
+			assert.Equal(t, errors.New("kota tidak ditemukan"), err)
+		},
+	)
 }

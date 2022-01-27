@@ -56,7 +56,7 @@ func (s StructCtrlHomestay) CreateHomestay() echo.HandlerFunc {
 		var create entities.Homestay
 		create.Name = homestay.Name
 		create.Price = homestay.Price
-		create.CityID = homestay.CityId
+		create.City_id = homestay.CityId
 		create.HostID = uint(userId)
 
 		res, err2 := s.repository.CreteaHomestay(create)

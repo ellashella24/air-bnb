@@ -44,7 +44,7 @@ func TestSetup(t *testing.T) {
 		Price:          100000,
 		Booking_Status: "available",
 		HostID:         1,
-		CityID:         1,
+		City_id:         1,
 	}
 
 	db.Create(&user)

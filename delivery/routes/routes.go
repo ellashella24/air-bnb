@@ -46,6 +46,7 @@ func RegisterPath(e *echo.Echo, uc *user.UserController, cc *city.CityController
 	e.GET("/booking/history", bc.BookingByUserID(), middleware.JWT([]byte("secret123")))
 	e.GET("/booking/recap", bc.FindBookingByHostID(), middleware.JWT([]byte("secret123")))
 	e.PUT("/booking/checkout", bc.CheckOut(), middleware.JWT([]byte("secret123")))
+	e.PUT("/booking/reschedule", bc.Reschedule(), middleware.JWT([]byte("secret123")))
 }
 
 func PathHomestay(e *echo.Echo, c controllers.StructCtrlHomestay) {
