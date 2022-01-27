@@ -75,7 +75,7 @@ func TestHomestay(t *testing.T) {
 		var responses common.ResponseSuccess
 
 		json.Unmarshal([]byte(res.Body.Bytes()), &responses)
-		assert.Equal(t, "success get all homestay", responses.Message)
+		assert.Equal(t, "Successful Operation", responses.Message)
 	})
 
 	t.Run("getallHomestayHost", func(t *testing.T) {
@@ -92,7 +92,7 @@ func TestHomestay(t *testing.T) {
 		var responses common.ResponseSuccess
 
 		json.Unmarshal([]byte(res.Body.Bytes()), &responses)
-		assert.Equal(t, "success get all host homestay", responses.Message)
+		assert.Equal(t, "Successful Operation", responses.Message)
 	})
 	t.Run("createHomestay", func(t *testing.T) {
 		e := echo.New()
@@ -114,7 +114,7 @@ func TestHomestay(t *testing.T) {
 		var responses common.ResponseSuccess
 
 		json.Unmarshal([]byte(res.Body.Bytes()), &responses)
-		assert.Equal(t, "ok mantap create success", responses.Message)
+		assert.Equal(t, "Successful Operation", responses.Message)
 	})
 
 	t.Run("updateHomestay", func(t *testing.T) {
@@ -137,7 +137,7 @@ func TestHomestay(t *testing.T) {
 		var responses common.ResponseSuccess
 
 		json.Unmarshal([]byte(res.Body.Bytes()), &responses)
-		assert.Equal(t, "ok mantap update success", responses.Message)
+		assert.Equal(t, "Successful Operation", responses.Message)
 	})
 
 	t.Run("deleteHomestay", func(t *testing.T) {
@@ -156,7 +156,7 @@ func TestHomestay(t *testing.T) {
 		var responses common.ResponseSuccess
 
 		json.Unmarshal([]byte(res.Body.Bytes()), &responses)
-		assert.Equal(t, "delete success gaess", responses.Message)
+		assert.Equal(t, "Successful Operation", responses.Message)
 	})
 
 	t.Run("getHomestayByCityId", func(t *testing.T) {
@@ -176,7 +176,7 @@ func TestHomestay(t *testing.T) {
 		var responses common.ResponseSuccess
 
 		json.Unmarshal([]byte(res.Body.Bytes()), &responses)
-		assert.Equal(t, "ada city", responses.Message)
+		assert.Equal(t, "Successful Operation", responses.Message)
 	})
 }
 
@@ -225,7 +225,7 @@ func TestHomestayFalse(t *testing.T) {
 		var responses common.ResponseSuccess
 
 		json.Unmarshal([]byte(res.Body.Bytes()), &responses)
-		assert.Equal(t, "gagal gaes get all homestay", responses.Message)
+		assert.Equal(t, "Not Found", responses.Message)
 	})
 
 	t.Run("getallHomestayHost", func(t *testing.T) {
@@ -242,93 +242,93 @@ func TestHomestayFalse(t *testing.T) {
 		var responses common.ResponseSuccess
 
 		json.Unmarshal([]byte(res.Body.Bytes()), &responses)
-		assert.Equal(t, "gagal gaes get all host homestay", responses.Message)
+		assert.Equal(t, "Not Found", responses.Message)
 	})
 
-	// t.Run("createHomestay", func(t *testing.T) {
-	// 	e := echo.New()
-	// 	reqBody, _ := json.Marshal(map[string]interface{}{
-	// 		"name":   "homestay1",
-	// 		"price":  1000,
-	// 		"cityid": 1,
-	// 	})
-	// 	req := httptest.NewRequest(http.MethodPost, "/", bytes.NewBuffer(reqBody))
-	// 	res := httptest.NewRecorder()
-	// 	req.Header.Set("Content-Type", "application/json")
-	// 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %v", jwtToken))
-	// 	context := e.NewContext(req, res)
-	// 	context.SetPath("/homestays/create")
+	t.Run("createHomestay", func(t *testing.T) {
+		e := echo.New()
+		reqBody, _ := json.Marshal(map[string]interface{}{
+			"name":   "homestay1",
+			"price":  1000,
+			"cityid": 1,
+		})
+		req := httptest.NewRequest(http.MethodPost, "/", bytes.NewBuffer(reqBody))
+		res := httptest.NewRecorder()
+		req.Header.Set("Content-Type", "application/json")
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %v", jwtToken))
+		context := e.NewContext(req, res)
+		context.SetPath("/homestays/create")
 
-	// 	homestayController := NewControllerHomestay(mockHomestayRepository{})
-	// 	middleware.JWT([]byte(constants.SecretKey))(homestayController.CreateHomestay())(context)
+		homestayController := NewControllerHomestay(mockHomestayRepository{})
+		middleware.JWT([]byte(constants.SecretKey))(homestayController.CreateHomestay())(context)
 
-	// 	var responses common.ResponseSuccess
+		var responses common.ResponseSuccess
 
-	// 	json.Unmarshal([]byte(res.Body.Bytes()), &responses)
-	// 	assert.Equal(t, "ok mantap create success", responses.Message)
-	// })
+		json.Unmarshal([]byte(res.Body.Bytes()), &responses)
+		assert.Equal(t, "Successful Operation", responses.Message)
+	})
 
-	// t.Run("updateHomestay", func(t *testing.T) {
-	// 	e := echo.New()
-	// 	reqBody, _ := json.Marshal(map[string]interface{}{
-	// 		"name":   "homestay1update",
-	// 		"price":  1000,
-	// 		"cityid": 1,
-	// 	})
-	// 	req := httptest.NewRequest(http.MethodPost, "/", bytes.NewBuffer(reqBody))
-	// 	res := httptest.NewRecorder()
-	// 	req.Header.Set("Content-Type", "application/json")
-	// 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %v", jwtToken))
-	// 	context := e.NewContext(req, res)
-	// 	context.SetPath("/homestays/update")
+	t.Run("updateHomestay", func(t *testing.T) {
+		e := echo.New()
+		reqBody, _ := json.Marshal(map[string]interface{}{
+			"name":   "homestay1update",
+			"price":  1000,
+			"cityid": 1,
+		})
+		req := httptest.NewRequest(http.MethodPost, "/", bytes.NewBuffer(reqBody))
+		res := httptest.NewRecorder()
+		req.Header.Set("Content-Type", "application/json")
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %v", jwtToken))
+		context := e.NewContext(req, res)
+		context.SetPath("/homestays/update")
 
-	// 	homestayController := NewControllerHomestay(mockHomestayRepository{})
-	// 	middleware.JWT([]byte(constants.SecretKey))(homestayController.UpdateHomestay())(context)
+		homestayController := NewControllerHomestay(mockHomestayRepository{})
+		middleware.JWT([]byte(constants.SecretKey))(homestayController.UpdateHomestay())(context)
 
-	// 	var responses common.ResponseSuccess
+		var responses common.ResponseSuccess
 
-	// 	json.Unmarshal([]byte(res.Body.Bytes()), &responses)
-	// 	assert.Equal(t, "ok mantap update success", responses.Message)
-	// })
+		json.Unmarshal([]byte(res.Body.Bytes()), &responses)
+		assert.Equal(t, "Successful Operation", responses.Message)
+	})
 
-	// t.Run("deleteHomestay", func(t *testing.T) {
-	// 	e := echo.New()
+	t.Run("deleteHomestay", func(t *testing.T) {
+		e := echo.New()
 
-	// 	req := httptest.NewRequest(http.MethodPost, "/", nil)
-	// 	res := httptest.NewRecorder()
-	// 	req.Header.Set("Content-Type", "application/json")
-	// 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %v", jwtToken))
-	// 	context := e.NewContext(req, res)
-	// 	context.SetPath("/homestays/delete")
+		req := httptest.NewRequest(http.MethodPost, "/", nil)
+		res := httptest.NewRecorder()
+		req.Header.Set("Content-Type", "application/json")
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %v", jwtToken))
+		context := e.NewContext(req, res)
+		context.SetPath("/homestays/delete")
 
-	// 	homestayController := NewControllerHomestay(mockHomestayRepository{})
-	// 	middleware.JWT([]byte(constants.SecretKey))(homestayController.DeleteHomestay())(context)
+		homestayController := NewControllerHomestay(mockHomestayRepository{})
+		middleware.JWT([]byte(constants.SecretKey))(homestayController.DeleteHomestay())(context)
 
-	// 	var responses common.ResponseSuccess
+		var responses common.ResponseSuccess
 
-	// 	json.Unmarshal([]byte(res.Body.Bytes()), &responses)
-	// 	assert.Equal(t, "delete success gaess", responses.Message)
-	// })
+		json.Unmarshal([]byte(res.Body.Bytes()), &responses)
+		assert.Equal(t, "Successful Operation", responses.Message)
+	})
 
-	// t.Run("getHomestayByCityId", func(t *testing.T) {
-	// 	e := echo.New()
+	t.Run("getHomestayByCityId", func(t *testing.T) {
+		e := echo.New()
 
-	// 	req := httptest.NewRequest(http.MethodPost, "/", nil)
-	// 	res := httptest.NewRecorder()
+		req := httptest.NewRequest(http.MethodPost, "/", nil)
+		res := httptest.NewRecorder()
 
-	// 	context := e.NewContext(req, res)
-	// 	context.SetPath("/homestays/:search")
-	// 	context.SetParamNames("search")
-	// 	context.SetParamValues("1")
+		context := e.NewContext(req, res)
+		context.SetPath("/homestays/:search")
+		context.SetParamNames("search")
+		context.SetParamValues("1")
 
-	// 	homestayController := NewControllerHomestay(mockHomestayRepository{})
-	// 	homestayController.GetHomestayByCityId()(context)
+		homestayController := NewControllerHomestay(mockHomestayRepository{})
+		homestayController.GetHomestayByCityId()(context)
 
-	// 	var responses common.ResponseSuccess
+		var responses common.ResponseSuccess
 
-	// 	json.Unmarshal([]byte(res.Body.Bytes()), &responses)
-	// 	assert.Equal(t, "ada city", responses.Message)
-	// })
+		json.Unmarshal([]byte(res.Body.Bytes()), &responses)
+		assert.Equal(t, "Successful Operation", responses.Message)
+	})
 }
 
 type mockHomestayRepository struct{}
@@ -348,7 +348,7 @@ func (m mockHomestayRepository) CreteaHomestay(homestay entities.Homestay) (enti
 	return entities.Homestay{Name: "homestay1", Price: 1000, City_id: 1}, nil
 }
 
-func (m mockHomestayRepository) GetHomestayIdByHostId(id int) (entities.Homestay, error) {
+func (m mockHomestayRepository) GetHomestayIdByHostId(idUser, idHomestay int) (entities.Homestay, error) {
 	return entities.Homestay{
 		Name:  "test1",
 		Price: 2000,
@@ -358,7 +358,7 @@ func (m mockHomestayRepository) GetHomestayIdByHostId(id int) (entities.Homestay
 func (m mockHomestayRepository) UpdateHomestay(homestay entities.Homestay) (entities.Homestay, error) {
 	return entities.Homestay{Name: "homestay1", Price: 1000, City_id: 1}, nil
 }
-func (m mockHomestayRepository) DeleteHomestayByHostId(id int) error {
+func (m mockHomestayRepository) DeleteHomestayByHostId(id, homeStay int) error {
 	return nil
 }
 func (m mockHomestayRepository) GetHomestayByCityId(city string) ([]entities.Homestay, error) {
@@ -379,7 +379,7 @@ func (m falsemockHomestayRepository) CreteaHomestay(homestay entities.Homestay) 
 
 	return entities.Homestay{Name: "homestay1", Price: 1000}, nil
 }
-func (m falsemockHomestayRepository) GetHomestayIdByHostId(id int) (entities.Homestay, error) {
+func (m falsemockHomestayRepository) GetHomestayIdByHostId(idUser, idHomestay int) (entities.Homestay, error) {
 	return entities.Homestay{
 		Name:  "test1",
 		Price: 2000,
@@ -388,7 +388,7 @@ func (m falsemockHomestayRepository) GetHomestayIdByHostId(id int) (entities.Hom
 func (m falsemockHomestayRepository) UpdateHomestay(homestay entities.Homestay) (entities.Homestay, error) {
 	return entities.Homestay{Name: "homestay1", Price: 1000}, nil
 }
-func (m falsemockHomestayRepository) DeleteHomestayByHostId(id int) error {
+func (m falsemockHomestayRepository) DeleteHomestayByHostId(id, homeStay int) error {
 	return nil
 }
 func (m falsemockHomestayRepository) GetHomestayByCityId(city string) ([]entities.Homestay, error) {

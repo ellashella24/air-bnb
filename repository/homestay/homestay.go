@@ -17,10 +17,10 @@ type InterfaceHomestay interface {
 	// CREATE
 	CreteaHomestay(homestay entities.Homestay) (entities.Homestay, error)
 	// UPDATE
-	GetHomestayIdByHostId(id int) (entities.Homestay, error)
+	GetHomestayIdByHostId(idUser, idHomestay int) (entities.Homestay, error)
 	UpdateHomestay(homestay entities.Homestay) (entities.Homestay, error)
 	// DELETE
-	DeleteHomestayByHostId(id int) error
+	DeleteHomestayByHostId(id, homeStay int) error
 	//GET HOMESTAY BY CITY
 	GetHomestayByCityId(city string) ([]entities.Homestay, error)
 }
@@ -65,9 +65,9 @@ func (h *homestay) CreteaHomestay(homestay entities.Homestay) (entities.Homestay
 	return homestay, nil
 }
 
-func (h *homestay) GetHomestayIdByHostId(id int) (entities.Homestay, error) {
+func (h *homestay) GetHomestayIdByHostId(idUser, idHomestay int) (entities.Homestay, error) {
 	var homestay entities.Homestay
-	err := h.db.Where("host_id = ?", id).Find(&homestay).Error
+	err := h.db.Where("host_id = ? AND id = ? ", idUser, idHomestay).First(&homestay).Error
 	if err != nil {
 		return homestay, err
 	}
@@ -83,9 +83,9 @@ func (h *homestay) UpdateHomestay(homestay entities.Homestay) (entities.Homestay
 	return homestay, nil
 }
 
-func (h *homestay) DeleteHomestayByHostId(id int) error {
+func (h *homestay) DeleteHomestayByHostId(id, homeStay int) error {
 	var delete entities.Homestay
-	err := h.db.Where("host_id = ?", id).Delete(&delete).Error
+	err := h.db.Where("host_id = ? AND id = ?", id, homeStay).Delete(&delete).Error
 	if err != nil {
 		return errors.New("gak ketemu idnya")
 	}

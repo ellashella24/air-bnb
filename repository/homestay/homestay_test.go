@@ -70,7 +70,7 @@ func TestHomestay(t *testing.T) {
 	})
 
 	t.Run("GethomestayIdByHostId", func(t *testing.T) {
-		res, _ := rp.GetHomestayIdByHostId(1)
+		res, _ := rp.GetHomestayIdByHostId(1, 1)
 
 		assert.Equal(t, "test1", res.Name)
 	})
@@ -87,7 +87,7 @@ func TestHomestay(t *testing.T) {
 
 	t.Run("DeleteHomestay", func(t *testing.T) {
 
-		err := rp.DeleteHomestayByHostId(1)
+		err := rp.DeleteHomestayByHostId(1, 1)
 		assert.Nil(t, err)
 	})
 
@@ -103,7 +103,7 @@ func TestHomestay(t *testing.T) {
 
 		res, _ := homestayRepo.GetHomestayByCityId(createCity.Name)
 
-		assert.Equal(t, mockHomestay.Name, res[0].Name)
+		assert.Equal(t, "test2", res[0].Name)
 
 		// var cities
 		// res, _ := rp.GetHomestayByCityId("hotel")
@@ -188,7 +188,7 @@ func TestHomestayFalse(t *testing.T) {
 		assert.Equal(t, 0, len(res))
 	})
 	t.Run("deleteHomestayByIdFalse", func(t *testing.T) {
-		err := rp.DeleteHomestayByHostId(10)
+		err := rp.DeleteHomestayByHostId(10, 2)
 		// assert.Nil(t, err)
 		assert.Equal(t, errors.New("gak ketemu idnya"), err)
 	})
@@ -200,7 +200,7 @@ func TestHomestayFalse(t *testing.T) {
 	})
 
 	t.Run("GethomestayIdByHostIdFalse", func(t *testing.T) {
-		_, err := rp.GetHomestayIdByHostId(2)
+		_, err := rp.GetHomestayIdByHostId(2, 2)
 
 		assert.Equal(t, errors.New("gak ketemu idnya"), err)
 	})
