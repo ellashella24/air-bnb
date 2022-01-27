@@ -4,6 +4,8 @@ go 1.17
 
 require github.com/golang-jwt/jwt v3.2.2+incompatible
 
+require github.com/stretchr/objx v0.1.0 // indirect
+
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
