@@ -55,6 +55,7 @@ func (h *homestay) GetAllHostHomestay(id int) ([]entities.Homestay, error) {
 }
 
 func (h *homestay) CreteaHomestay(homestay entities.Homestay) (entities.Homestay, error) {
+
 	err := h.db.Save(&homestay).Error
 	if err != nil {
 		return homestay, err
@@ -94,7 +95,9 @@ func (h *homestay) DeleteHomestayByHostId(id, homeStay int) error {
 
 func (h *homestay) GetHomestayByCityId(city string) ([]entities.Homestay, error) {
 	var homestay []entities.Homestay
-	err := h.db.Table("homestays").Select("homestays.*").Joins("join cities on homestays.city_id  = cities.id").Where("cities.name = ?", city).Find(&homestay).Error
+	err := h.db.Table("homestays").Select("homestays.*").Joins("join cities on homestays.city_id  = cities.id").Where(
+		"cities.name = ?", city,
+	).Find(&homestay).Error
 	if err != nil {
 		return nil, errors.New("kota tidak ditemukan")
 	}

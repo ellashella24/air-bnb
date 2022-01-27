@@ -40,6 +40,12 @@ func RegisterPath(e *echo.Echo, uc *user.UserController, cc *city.CityController
 	e.PUT("/city/:id", cc.UpdateCity(), middleware.JWT([]byte("secret123")), mw.IsAdmin)
 	e.DELETE("/city/:id", cc.DeleteCity(), middleware.JWT([]byte("secret123")), mw.IsAdmin)
 
+	e.POST("/booking", bc.Create(), middleware.JWT([]byte("secret123")))
+	e.POST("/booking/callback", bc.Callback())
+	e.GET("/booking/history", bc.BookingByUserID(), middleware.JWT([]byte("secret123")))
+	e.GET("/booking/recap", bc.FindBookingByHostID(), middleware.JWT([]byte("secret123")))
+	e.PUT("/booking/checkout", bc.CheckOut(), middleware.JWT([]byte("secret123")))
+	e.PUT("/booking/reschedule", bc.Reschedule(), middleware.JWT([]byte("secret123")))
 }
 
 func PathHomestay(e *echo.Echo, c controllers.StructCtrlHomestay) {
